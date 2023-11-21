@@ -146,6 +146,7 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
   package Test
 
     model TestVentilation_withoutStream
+       extends Modelica.Icons.Example;
       Physiolibrary.Types.Constants.VolumeFlowRateConst VAi(k(displayUnit=
               "l/min") = 8.3333333333333e-05)
         annotation (Placement(transformation(extent={{-97,64},{-89,70}})));
@@ -226,6 +227,7 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
     end TestVentilation_withoutStream;
 
     model PO2PCO2test
+       extends Modelica.Icons.Example;
       AcidBaseBalance.Acidbase.OSA.PO2PCO2_by_integration pO2PCO2_by_integration
         annotation (Placement(transformation(extent={{-28,-18},{56,74}})));
       Physiolibrary.Types.Constants.ConcentrationConst BEox(k=-25)
@@ -234,9 +236,13 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
         annotation (Placement(transformation(extent={{-80,54},{-72,62}})));
       Physiolibrary.Types.Constants.PressureConst PCO2(k=5332.8954966)
         annotation (Placement(transformation(extent={{-80,34},{-72,42}})));
+      inner AcidBaseBalance.Interfaces.ModelSettings
+                                     modelSettings(PB=101325.0144354,
+          lungShuntFraction=0.05)
+        annotation (Placement(transformation(extent={{-98,80},{-78,100}})));
     equation
       connect(BEox.y, pO2PCO2_by_integration.BEox)
-        annotation (Line(points={{-65,22},{-34.5333,21.1}}, color={0,0,127}));
+        annotation (Line(points={{-65,22},{-33.6,21.1}},    color={0,0,127}));
       connect(PO2.y, pO2PCO2_by_integration.pO2) annotation (Line(points={{-71,58},
               {-33.6,58},{-33.6,58.6667}},color={0,0,127}));
       connect(PCO2.y, pO2PCO2_by_integration.pCO2) annotation (Line(points={{-71,38},
@@ -245,51 +251,81 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
             coordinateSystem(preserveAspectRatio=false)));
     end PO2PCO2test;
 
-    model PO2test
+    model PO2CurveTest
+       extends Modelica.Icons.Example;
       AcidBaseBalance.Acidbase.OSA.PO2PCO2_by_integration pO2PCO2_by_integration
         annotation (Placement(transformation(extent={{-28,-16},{56,76}})));
-      Physiolibrary.Types.Constants.ConcentrationConst BEox(k=0)
-        annotation (Placement(transformation(extent={{-74,18},{-66,26}})));
-      Physiolibrary.Types.Constants.PressureConst PO2(k=13332.2387415)
-        annotation (Placement(transformation(extent={{-80,72},{-72,80}})));
       Physiolibrary.Types.Constants.PressureConst PCO2(k=5332.8954966)
-        annotation (Placement(transformation(extent={{-80,34},{-72,42}})));
-      Physiolibrary.Types.Constants.PressureConst PO1(k=133.322387415)
-        annotation (Placement(transformation(extent={{-54,-46},{-46,-38}})));
+        annotation (Placement(transformation(extent={{-78,38},{-70,46}})));
+      Physiolibrary.Types.Constants.PressureConst PO2(k=133.322387415)
+        annotation (Placement(transformation(extent={{-56,-44},{-48,-36}})));
     Modelica.Blocks.Math.Product product1
       annotation (Placement(transformation(extent={{-36,-58},{-16,-38}})));
     Modelica.Blocks.Sources.Ramp ramp(height=200, duration=200)
       annotation (Placement(transformation(extent={{-90,-66},{-70,-46}})));
-    Modelica.Blocks.Continuous.Derivative derivative(T=0.1)
-      annotation (Placement(transformation(extent={{84,54},{104,74}})));
+      inner AcidBaseBalance.Interfaces.ModelSettings
+                                     modelSettings(PB=101325.0144354,
+          lungShuntFraction=0.05)
+        annotation (Placement(transformation(extent={{-100,78},{-80,98}})));
+      conc_mmol_to_ml CdCO2_ml
+        annotation (Placement(transformation(extent={{90,-40},{108,-24}})));
+      conc_mmol_to_ml CdO2_ml
+        annotation (Placement(transformation(extent={{88,-18},{106,-2}})));
+      Hb_mmol_to_g ceHb_g
+        annotation (Placement(transformation(extent={{88,10},{108,30}})));
+      conc_mmol_to_ml CtCO2_ml
+        annotation (Placement(transformation(extent={{90,42},{108,58}})));
+      conc_mmol_to_ml CtO2_ml
+        annotation (Placement(transformation(extent={{90,64},{108,80}})));
+      Hb_mmol_to_g Hb_g_per_l
+        annotation (Placement(transformation(extent={{-8,78},{12,98}})));
+      Physiolibrary.Types.Constants.ConcentrationConst ctHb(k=(modelSettings.ctHb))
+        annotation (Placement(transformation(extent={{-56,84},{-48,92}})));
+      Modelica.Blocks.Sources.Constant BEox(k=0)
+        annotation (Placement(transformation(extent={{-78,6},{-64,20}})));
     equation
-      connect(BEox.y, pO2PCO2_by_integration.BEox)
-        annotation (Line(points={{-65,22},{-34.5333,23.1}}, color={0,0,127}));
-      connect(PCO2.y, pO2PCO2_by_integration.pCO2) annotation (Line(points={{-71,38},
-              {-33.6,38},{-33.6,40.7333}}, color={0,0,127}));
-    connect(PO1.y, product1.u1)
-      annotation (Line(points={{-45,-42},{-38,-42}}, color={0,0,127}));
+      connect(PCO2.y, pO2PCO2_by_integration.pCO2) annotation (Line(points={{-69,42},
+              {-33.6,42},{-33.6,40.7333}}, color={0,0,127}));
+    connect(PO2.y, product1.u1)
+      annotation (Line(points={{-47,-40},{-42,-40},{-42,-42},{-38,-42}},
+                                                     color={0,0,127}));
     connect(ramp.y, product1.u2) annotation (Line(points={{-69,-56},{-46,-56},{
               -46,-62},{-38,-62},{-38,-54}},
                                  color={0,0,127}));
     connect(product1.y, pO2PCO2_by_integration.pO2) annotation (Line(points={{-15,-48},
               {6,-48},{6,-14},{-84,-14},{-84,60.6667},{-33.6,60.6667}},
           color={0,0,127}));
-    connect(pO2PCO2_by_integration.ctO2, derivative.u) annotation (Line(points={{69.0667,
-              65.2667},{82,65.2667},{82,64}},         color={0,0,127}));
+      connect(ctHb.y, Hb_g_per_l.Hb_mmol)
+        annotation (Line(points={{-47,88},{-10,88}}, color={0,0,127}));
+      connect(pO2PCO2_by_integration.ctO2, CtO2_ml.mmol_per_liter) annotation (
+          Line(points={{69.0667,65.2667},{69.0667,72},{88.38,72}}, color={0,0,
+              127}));
+      connect(pO2PCO2_by_integration.ctCO2, CtCO2_ml.mmol_per_liter)
+        annotation (Line(points={{69.0667,57.6},{82,57.6},{82,50},{88.38,50}},
+            color={0,0,127}));
+      connect(pO2PCO2_by_integration.ceHb, ceHb_g.Hb_mmol) annotation (Line(
+            points={{69.0667,20.0333},{77.5333,20.0333},{77.5333,20},{86,20}},
+            color={0,0,127}));
+      connect(CdO2_ml.mmol_per_liter, pO2PCO2_by_integration.cdO2) annotation (
+          Line(points={{86.38,-10},{82,-10},{82,12},{69.0667,12},{69.0667,
+              12.3667}}, color={0,0,127}));
+      connect(pO2PCO2_by_integration.cdCO2, CdCO2_ml.mmol_per_liter)
+        annotation (Line(points={{69.0667,4.7},{76,4.7},{76,-32},{88.38,-32}},
+            color={0,0,127}));
+      connect(BEox.y, pO2PCO2_by_integration.BEox) annotation (Line(points={{
+              -63.3,13},{-44,13},{-44,23.1},{-33.6,23.1}}, color={0,0,127}));
       annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
             coordinateSystem(preserveAspectRatio=false)),
       experiment(
         StopTime=200,
         __Dymola_NumberOfIntervals=5000,
         __Dymola_Algorithm="Dassl"));
-    end PO2test;
+    end PO2CurveTest;
 
-    model PCO2test
+    model PCO2CurveTest
+       extends Modelica.Icons.Example;
       AcidBaseBalance.Acidbase.OSA.PO2PCO2_by_integration pO2PCO2_by_integration
         annotation (Placement(transformation(extent={{-28,-18},{56,74}})));
-      Physiolibrary.Types.Constants.ConcentrationConst BEox(k=0)
-        annotation (Placement(transformation(extent={{-74,18},{-66,26}})));
       Physiolibrary.Types.Constants.PressureConst PO2(k=13332.2387415)
         annotation (Placement(transformation(extent={{-86,54},{-78,62}})));
       Physiolibrary.Types.Constants.PressureConst PCO2(k=133.322387415)
@@ -301,11 +337,32 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
       duration=100,
       offset=0.000001)
       annotation (Placement(transformation(extent={{-84,-86},{-64,-66}})));
-    Modelica.Blocks.Continuous.Derivative derivative(T=0.1)
-      annotation (Placement(transformation(extent={{104,46},{124,66}})));
+      inner AcidBaseBalance.Interfaces.ModelSettings
+                                     modelSettings(
+        PB=101325.0144354,
+        lungShuntFraction=0.05,
+        ctHb=9.4)
+        annotation (Placement(transformation(extent={{-98,80},{-78,100}})));
+      conc_mmol_to_ml CtO2_ml
+        annotation (Placement(transformation(extent={{96,68},{114,84}})));
+      conc_mmol_to_ml CtCO2_ml
+        annotation (Placement(transformation(extent={{96,46},{114,62}})));
+      Hb_mmol_to_g ceHb_g
+        annotation (Placement(transformation(extent={{94,10},{114,30}})));
+      conc_mmol_to_ml CdCO2_ml
+        annotation (Placement(transformation(extent={{96,-36},{114,-20}})));
+      conc_mmol_to_ml CdO2_ml
+        annotation (Placement(transformation(extent={{94,-14},{112,2}})));
+
+      Physiolibrary.Types.Constants.ConcentrationConst ctHb(k=(modelSettings.ctHb))
+        annotation (Placement(transformation(extent={{-50,88},{-42,96}})));
+      Hb_mmol_to_g Hb_g_per_l
+        annotation (Placement(transformation(extent={{-2,82},{18,102}})));
+      Modelica.Blocks.Sources.Constant BEox(k=0)
+        annotation (Placement(transformation(extent={{-74,14},{-60,28}})));
     equation
-      connect(BEox.y, pO2PCO2_by_integration.BEox)
-        annotation (Line(points={{-65,22},{-34.5333,21.1}}, color={0,0,127}));
+
+
     connect(ramp.y, product1.u2) annotation (Line(points={{-63,-76},{-44,-76},{
             -44,-54},{-38,-54}}, color={0,0,127}));
     connect(pO2PCO2_by_integration.pO2, PO2.y) annotation (Line(points={{-33.6,
@@ -316,17 +373,30 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
     connect(product1.y, pO2PCO2_by_integration.pCO2) annotation (Line(points={{-15,-48},
               {6,-48},{6,-20},{-92,-20},{-92,38.7333},{-33.6,38.7333}},
           color={0,0,127}));
-    connect(derivative.u, pO2PCO2_by_integration.ctCO2)
-      annotation (Line(points={{102,56},{69.0667,55.6}}, color={0,0,127}));
+      connect(pO2PCO2_by_integration.ctO2, CtO2_ml.mmol_per_liter) annotation (Line(
+            points={{69.0667,63.2667},{80,63.2667},{80,76},{94.38,76}}, color={0,0,127}));
+      connect(pO2PCO2_by_integration.ctCO2, CtCO2_ml.mmol_per_liter) annotation (
+          Line(points={{69.0667,55.6},{80,55.6},{80,54},{94.38,54}}, color={0,0,127}));
+      connect(pO2PCO2_by_integration.ceHb, ceHb_g.Hb_mmol) annotation (Line(points={{69.0667,
+              18.0333},{82,18.0333},{82,20},{92,20}},          color={0,0,127}));
+      connect(pO2PCO2_by_integration.cdO2, CdO2_ml.mmol_per_liter) annotation (Line(
+            points={{69.0667,10.3667},{86,10.3667},{86,-6},{92.38,-6}}, color={0,0,127}));
+      connect(pO2PCO2_by_integration.cdCO2, CdCO2_ml.mmol_per_liter) annotation (
+          Line(points={{69.0667,2.7},{78,2.7},{78,-28},{94.38,-28}}, color={0,0,127}));
+      connect(ctHb.y, Hb_g_per_l.Hb_mmol)
+        annotation (Line(points={{-41,92},{-4,92}}, color={0,0,127}));
+      connect(BEox.y, pO2PCO2_by_integration.BEox) annotation (Line(points={{
+              -59.3,21},{-42,21},{-42,21.1},{-33.6,21.1}}, color={0,0,127}));
       annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
             coordinateSystem(preserveAspectRatio=false)),
       experiment(
         StopTime=200,
         __Dymola_NumberOfIntervals=5000,
         __Dymola_Algorithm="Dassl"));
-    end PCO2test;
+    end PCO2CurveTest;
 
     model TestPulmonaryVentilation
+       extends Modelica.Icons.Example;
       Physiolibrary.Types.Constants.VolumeFlowRateConst VAi(k(displayUnit=
               "l/min") = 8.3333333333333e-05)
         annotation (Placement(transformation(extent={{-97,64},{-89,70}})));
@@ -348,7 +418,7 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
         PB=101325.0144354,
         lungShuntFraction=0.05,
         ctHb=11)
-        annotation (Placement(transformation(extent={{-98,80},{-78,100}})));
+        annotation (Placement(transformation(extent={{-120,78},{-100,98}})));
       AcidBaseBalance.Acidbase.OSA.AlvEq_2units_with_shunts_and_mixing alvEq_2units_with_shunts_and_mixing
         annotation (Placement(transformation(extent={{-24,4},{56,78}})));
       Physiolibrary.Types.Constants.ConcentrationConst BEox(k=0)
@@ -387,13 +457,17 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
         annotation (Line(points={{-48.1778,-136.233},{-58,-136.233},{-58,70},{
               -40,70},{-40,64.125},{-24,64.125}}, color={0,0,127}));
       connect(pO2PCO2_1.ctCO2, alvEq_2units_with_shunts_and_mixing.CvCO2)
-        annotation (Line(points={{65.6667,-84.1},{56,-84.1},{56,-4},{-56,-4},{
-              -56,44.0063},{-23.8261,44.0063}}, color={0,0,127}));
+        annotation (Line(points={{65.6667,-84.1},{76,-84.1},{76,-14},{-66,-14},
+              {-66,44.0063},{-23.8261,44.0063}},color={0,0,127}));
       connect(PvCO2.y, pO2PCO2_1.pCO2) annotation (Line(points={{-112,-99},{
               -112,-100},{-50,-100},{-50,-97.9},{-49.2222,-97.9}}, color={0,0,
               127}));
       connect(PvO2.y, pO2PCO2_1.pO2) annotation (Line(points={{-110,-63},{-110,
               -70},{-49.2222,-70},{-49.2222,-73.3667}}, color={0,0,127}));
+      connect(alvEq_2units_with_shunts_and_mixing.CvO2, pO2PCO2_1.ctO2) annotation (
+         Line(points={{-24.1739,50.0187},{-68,50.0187},{-68,-20},{74,-20},{74,
+              -76.4333},{65.6667,-76.4333}},
+                                   color={0,0,127}));
       annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{
                 -120,-200},{100,100}})),                             Diagram(
             coordinateSystem(preserveAspectRatio=false, extent={{-120,-200},{
@@ -401,6 +475,7 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
     end TestPulmonaryVentilation;
 
     model PO2test_
+       extends Modelica.Icons.Example;
       Physiolibrary.Types.Constants.PressureConst PO2(k=5332.8954966)
         annotation (Placement(transformation(extent={{-84,8},{-76,16}})));
       AcidBaseBalance.Acidbase.OSA.PO2PCO2 pO2PCO2_2
@@ -412,7 +487,7 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
       inner AcidBaseBalance.Interfaces.ModelSettings
                                      modelSettings(PB=101325.0144354,
           lungShuntFraction=0.05)
-        annotation (Placement(transformation(extent={{-70,66},{-50,86}})));
+        annotation (Placement(transformation(extent={{-98,78},{-78,98}})));
     equation
       connect(PCO2.y, pO2PCO2_2.pCO2) annotation (Line(points={{-65,-12},{
               -49.7222,-12},{-49.7222,-11.25},{-34.4444,-11.25}}, color={0,0,
@@ -1159,6 +1234,96 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
             fillPattern=FillPattern.Solid,
             textString="%name")}),                                                                                                 Diagram(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}})));
   end SimplestTissueIntgr;
+
+  model Hb_mmol_to_g
+    Physiolibrary.Types.RealIO.ConcentrationInput Hb_mmol annotation (Placement(
+          transformation(extent={{-142,-14},{-102,26}}), iconTransformation(
+            extent={{-140,-20},{-100,20}})));
+    Physiolibrary.Types.RealIO.MassConcentrationOutput Hb_g annotation (Placement(
+          transformation(extent={{110,-10},{130,10}}), iconTransformation(extent={
+              {100,-18},{138,20}})));
+  equation
+    Hb_g*0.6206 = Hb_mmol;
+    annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
+            Rectangle(
+            extent={{-100,98},{100,-100}},
+            lineColor={28,108,200},
+            fillColor={255,255,0},
+            fillPattern=FillPattern.Solid), Text(
+            extent={{-42,80},{26,-20}},
+            textColor={28,108,200},
+            textString="Hb"),
+          Polygon(
+            points={{-78,-24},{-78,-42},{78,-30},{-78,-24}},
+            lineColor={28,108,200},
+            fillColor={28,108,200},
+            fillPattern=FillPattern.Solid),
+          Text(
+            extent={{-108,-106},{108,-126}},
+            textColor={28,108,200},
+            textString="%name")}),
+                                Diagram(coordinateSystem(preserveAspectRatio=false)));
+  end Hb_mmol_to_g;
+
+  model conc_mmol_to_ml
+    Physiolibrary.Types.RealIO.ConcentrationInput mmol_per_liter annotation (
+        Placement(transformation(extent={{-142,-14},{-102,26}}),
+          iconTransformation(extent={{-138,-20},{-98,20}})));
+    Modelica.Blocks.Interfaces.RealOutput ml_per_liter annotation (Placement(
+          transformation(extent={{240,60},{260,80}}), iconTransformation(extent={{
+              100,-18},{136,18}})));
+  equation
+     ml_per_liter = mmol_per_liter *22.392;
+    annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
+            Rectangle(
+            extent={{-100,98},{100,-100}},
+            lineColor={28,108,200},
+            fillColor={255,255,0},
+            fillPattern=FillPattern.Solid), Text(
+            extent={{-102,40},{100,14}},
+            textColor={28,108,200},
+            textString="STPD"),
+          Polygon(
+            points={{-78,-24},{-78,-42},{78,-30},{-78,-24}},
+            lineColor={28,108,200},
+            fillColor={28,108,200},
+            fillPattern=FillPattern.Solid),
+          Text(
+            extent={{-122,-102},{118,-126}},
+            textColor={28,108,200},
+            textString="%name")}),
+                                Diagram(coordinateSystem(preserveAspectRatio=false)));
+  end conc_mmol_to_ml;
+
+  model flow_mmol_to_ml
+    Physiolibrary.Types.RealIO.VolumeFlowRateOutput volumeflowrate annotation (
+        Placement(transformation(extent={{238,-12},{258,8}}), iconTransformation(
+            extent={{100,-16},{134,18}})));
+    Physiolibrary.Types.RealIO.MolarFlowRateInput molarflowrate annotation (
+        Placement(transformation(extent={{-270,24},{-230,64}}),
+          iconTransformation(extent={{-140,-20},{-100,20}})));
+  equation
+     volumeflowrate = molarflowrate *22.392;
+    annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
+            Rectangle(
+            extent={{-100,98},{100,-100}},
+            lineColor={28,108,200},
+            fillColor={255,255,0},
+            fillPattern=FillPattern.Solid), Text(
+            extent={{-102,40},{100,14}},
+            textColor={28,108,200},
+            textString="STPD"),
+          Polygon(
+            points={{-78,-24},{-78,-42},{78,-30},{-78,-24}},
+            lineColor={28,108,200},
+            fillColor={28,108,200},
+            fillPattern=FillPattern.Solid),
+          Text(
+            extent={{-114,-108},{138,-136}},
+            textColor={28,108,200},
+            textString="%name")}),
+                                Diagram(coordinateSystem(preserveAspectRatio=false)));
+  end flow_mmol_to_ml;
   annotation (uses(
       Modelica(version="4.0.0"),
       Physiolibrary(version="2.4.1"),
