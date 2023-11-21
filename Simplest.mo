@@ -585,32 +585,46 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
     model TestAlveolarVentilation
          extends Modelica.Icons.Example;
       AcidBaseBalance.Acidbase.OSA.AlvGases alvGases
-        annotation (Placement(transformation(extent={{-26,12},{26,72}})));
-      Physiolibrary.Types.Constants.VolumeFlowRateConst VAi(k=
-            8.3333333333333e-05)
-        annotation (Placement(transformation(extent={{-92,54},{-74,72}})));
+        annotation (Placement(transformation(extent={{30,8},{82,68}})));
+      Physiolibrary.Types.Constants.VolumeFlowRateConst VAi(k=7.5e-05)
+        annotation (Placement(transformation(extent={{-54,66},{-36,84}})));
       Physiolibrary.Types.Constants.MolarFlowRateConst MO2(k=
             0.00018333333333333)
-        annotation (Placement(transformation(extent={{-90,22},{-72,42}})));
+        annotation (Placement(transformation(extent={{-34,18},{-16,38}})));
       Physiolibrary.Types.Constants.FractionConst RQ(k(displayUnit="1") = 0.85)
-        annotation (Placement(transformation(extent={{-94,-6},{-74,12}})));
+        annotation (Placement(transformation(extent={{-38,-10},{-18,8}})));
       Modelica.Blocks.Math.Product product1
-        annotation (Placement(transformation(extent={{-60,12},{-48,24}})));
+        annotation (Placement(transformation(extent={{-4,8},{8,20}})));
       inner AcidBaseBalance.Interfaces.ModelSettings
                                      modelSettings(PB=101325.0144354,
           lungShuntFraction=0.05)
         annotation (Placement(transformation(extent={{-94,78},{-74,98}})));
+    Modelica.Blocks.Math.Product product2
+      annotation (Placement(transformation(extent={{-38,-54},{-18,-34}})));
+    Modelica.Blocks.Sources.Ramp ramp(
+        height=6000,
+        duration=6000,
+        offset=1500)
+      annotation (Placement(transformation(extent={{-92,-62},{-72,-42}})));
+      Physiolibrary.Types.Constants.VolumeFlowRateConst VAi1(k=
+            1.6666666666667e-08)
+        annotation (Placement(transformation(extent={{-88,-26},{-70,-8}})));
     equation
-      connect(VAi.y, alvGases.VAi) annotation (Line(points={{-71.75,63},{-32,63},
-              {-32,45.6},{-27.56,45.6}}, color={0,0,127}));
-      connect(product1.y, alvGases.VCO2) annotation (Line(points={{-47.4,18},{
-              -32,18},{-32,30},{-27.56,30}}, color={0,0,127}));
-      connect(product1.u1, MO2.y) annotation (Line(points={{-61.2,21.6},{-66,
-              21.6},{-66,32},{-69.75,32}}, color={0,0,127}));
-      connect(RQ.y, product1.u2) annotation (Line(points={{-71.5,3},{-68,3},{
-              -68,14.4},{-61.2,14.4}}, color={0,0,127}));
-      connect(alvGases.VO2, MO2.y) annotation (Line(points={{-27.56,36},{-60,36},
-              {-60,32},{-69.75,32}}, color={0,0,127}));
+      connect(product1.y, alvGases.VCO2) annotation (Line(points={{8.6,14},{24,
+              14},{24,26},{28.44,26}},       color={0,0,127}));
+      connect(product1.u1, MO2.y) annotation (Line(points={{-5.2,17.6},{-10,
+              17.6},{-10,28},{-13.75,28}}, color={0,0,127}));
+      connect(RQ.y, product1.u2) annotation (Line(points={{-15.5,-1},{-12,-1},{
+              -12,10.4},{-5.2,10.4}},  color={0,0,127}));
+      connect(alvGases.VO2, MO2.y) annotation (Line(points={{28.44,32},{-4,32},
+              {-4,28},{-13.75,28}},  color={0,0,127}));
+    connect(ramp.y,product2. u2) annotation (Line(points={{-71,-52},{-71,-50},{
+              -40,-50}},         color={0,0,127}));
+      connect(product2.u1, VAi1.y) annotation (Line(points={{-40,-38},{-60,-38},
+              {-60,-17},{-67.75,-17}}, color={0,0,127}));
+      connect(product2.y, alvGases.VAi) annotation (Line(points={{-17,-44},{-10,
+              -44},{-10,-46},{2,-46},{2,-14},{-56,-14},{-56,41.6},{28.44,41.6}},
+            color={0,0,127}));
       annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
             coordinateSystem(preserveAspectRatio=false)));
     end TestAlveolarVentilation;
