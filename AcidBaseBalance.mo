@@ -1008,10 +1008,13 @@ BEox"),       Text(
       model AlvGases
         Physiolibrary.Types.RealIO.PressureOutput PAO2 annotation(Placement(transformation(extent = {{36, 41}, {50, 55}}), iconTransformation(extent = {{100, 46}, {120, 66}})));
         Physiolibrary.Types.RealIO.PressureOutput PACO2 annotation(Placement(transformation(extent = {{36, 70}, {48, 82}}), iconTransformation(extent = {{100, 24}, {120, 44}})));
-        Physiolibrary.Types.RealIO.VolumeFlowRateInput VAi annotation(Placement(transformation(extent = {{-92, 6}, {-62, 36}}), iconTransformation(extent = {{-6, -6}, {6, 6}}, rotation = 0, origin = {-106, 12})));
+        Physiolibrary.Types.RealIO.VolumeFlowRateInput VAi annotation(Placement(transformation(extent={{-106,42},
+                  {-76,72}}),                                                                                                   iconTransformation(extent = {{-6, -6}, {6, 6}}, rotation = 0, origin = {-106, 12})));
         Physiolibrary.Types.RealIO.VolumeFlowRateOutput VAe annotation(Placement(transformation(extent = {{100, 2}, {120, 22}}), iconTransformation(extent = {{100, 2}, {120, 22}})));
-        Physiolibrary.Types.RealIO.MolarFlowRateInput VO2 annotation(Placement(transformation(extent = {{-142, -10}, {-102, 30}}), iconTransformation(extent = {{-112, -26}, {-100, -14}})));
-        Physiolibrary.Types.RealIO.MolarFlowRateInput VCO2 annotation(Placement(transformation(extent = {{-142, -10}, {-102, 30}}), iconTransformation(extent = {{-112, -46}, {-100, -34}})));
+        Physiolibrary.Types.RealIO.MolarFlowRateInput VO2 annotation(Placement(transformation(extent={{-114,0},
+                  {-74,40}}),                                                                                                      iconTransformation(extent = {{-112, -26}, {-100, -14}})));
+        Physiolibrary.Types.RealIO.MolarFlowRateInput VCO2 annotation(Placement(transformation(extent={{-108,
+                  -42},{-68,-2}}),                                                                                                  iconTransformation(extent = {{-112, -46}, {-100, -34}})));
         Real VAi_BTPS_l_per_min "inspired alveolar ventilation in l BTPS/min";
         Real temp_cels "?core body temperature in ?C";
         Real PB_mmHg "barometric pressure";
@@ -1022,50 +1025,71 @@ BEox"),       Text(
         Real PAO2_mmHg "alveolar pO2 [mmHg]";
         Real PACO2_mmHg "alveolar PCO2 [mmHg]";
         Real VAe_BTPS_l_per_min "expired alveolar ventilation in l BTPS/min";
+        Real FinspCO2 "CO2 fraction concentration in dry inspired gas";
+        Real FinspO2 "O2 fraction concentration in dry inspired gas";
         outer Interfaces.ModelSettings modelSettings
           annotation (Placement(transformation(extent={{-100,80},{-80,100}})));
       algorithm
         (PAO2_mmHg,PACO2_mmHg,VAe_BTPS_l_per_min) := OSA.AlveolarGases(
                 VAi_BTPS_l_per_min,
-                modelSettings.FiO2,
-                modelSettings.FiCO2,
+                FinspO2,
+                FinspCO2,
                 temp_cels,
                 PB_mmHg,
                 VO2_mmol_per_min,
                 VCO2_mmol_per_min);
       equation
+         FinspO2 = modelSettings.FiO2;
+        //from percent to fraction
+
+         FinspCO2 = modelSettings.FiCO2;
+        //from percent to fraction
+
         temp_cels = modelSettings.Temperature - 273.15;
         //from grad C to grad K conversion
+
         PB_mmHg = modelSettings.PB / 133.322365;
+
         // from mmHg to Pa conversion
         PAO2_mmHg = PAO2 / 133.322365;
+
         // from mmHg to Pa conversion
         PACO2_mmHg = PACO2 / 133.322365;
+
         // from mmHg to Pa conversion
         VAi_BTPS_l_per_min = VAi * 60000;
+
         // from m^3/sec to l/min conversion
         VAe = VAe_BTPS_l_per_min / 60000;
         //from l/min to m^3/sec conversion
         VO2 = VO2_mmol_per_min / 60 / 1000;
+
         //from mmol/min to mol/sec conversion
         VCO2 = VCO2_mmol_per_min / 60 / 1000;
+
         //from mmol/min to mol/sec conversion
         annotation(Icon(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}}), graphics={  Rectangle(extent = {{-100, 100}, {100, -100}}, lineColor = {0, 0, 255}, fillColor = {255, 255, 0},
-                  fillPattern =                                                                                                   FillPattern.Solid), Text(extent = {{-42, -40}, {82, -86}}, lineColor = {0, 0, 255}, fillColor = {255, 255, 0},
-                  fillPattern =                                                                                                   FillPattern.Solid, textString = "AlvGases"),   Text(extent = {{-46, 44}, {94, 24}}, lineColor = {0, 0, 255}, fillColor = {255, 255, 0},
-                  fillPattern =                                                                                                   FillPattern.Solid, fontSize = 12,
-                  horizontalAlignment =                                                                                                   TextAlignment.Right, textString = "PACO2"), Text(extent = {{-80, 62}, {94, 52}}, lineColor = {0, 0, 255}, fillColor = {255, 255, 0},
-                  fillPattern =                                                                                                   FillPattern.Solid, fontSize = 12,
-                  horizontalAlignment =                                                                                                   TextAlignment.Right, textString = "PAO2"), Text(extent = {{-94, 16}, {0, 6}}, lineColor = {0, 0, 255}, fillColor = {255, 255, 0},
-                  fillPattern =                                                                                                   FillPattern.Solid, fontSize = 12,
-                  horizontalAlignment =                                                                                                   TextAlignment.Left, textString = "VAi"), Text(extent = {{-46, 20}, {94, 4}}, lineColor = {0, 0, 255}, fillColor = {255, 255, 0},
-                  fillPattern =                                                                                                   FillPattern.Solid, fontSize = 12,
-                  horizontalAlignment =                                                                                                   TextAlignment.Right, textString = "VAe"), Text(extent = {{-94, -14}, {52, -28}}, lineColor = {0, 0, 255}, fillColor = {255, 255, 0},
-                  fillPattern =                                                                                                   FillPattern.Solid, fontSize = 12,
-                  horizontalAlignment =                                                                                                   TextAlignment.Left, textString = "VO2"), Text(extent = {{-94, -36}, {66, -50}}, lineColor = {0, 0, 255}, fillColor = {255, 255, 0},
-                  fillPattern =                                                                                                   FillPattern.Solid, fontSize = 12,
-                  horizontalAlignment =                                                                                                   TextAlignment.Left, textString = "VCO2")}),
-                                                                                                    Diagram(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}})));
+                  fillPattern =                                                                                                   FillPattern.Solid), Text(extent={{-100,
+                    -56},{100,-100}},                                                                                                                                                        lineColor = {0, 0, 255}, fillColor = {255, 255, 0},
+                  fillPattern =                                                                                                   FillPattern.Solid, textString = "AlvGases"),   Text(extent = {{-46, 44}, {94, 24}}, lineColor={0,0,255},     fillColor = {255, 255, 0},
+                  fillPattern =                                                                                                   FillPattern.Solid, fontSize=10,
+                  horizontalAlignment=TextAlignment.Right,
+                textString="PACO2"),                                                                                                                                                  Text(extent = {{-80, 62}, {94, 52}}, lineColor={0,0,255},     fillColor = {255, 255, 0},
+                  fillPattern =                                                                                                   FillPattern.Solid, fontSize=10,
+                  horizontalAlignment=TextAlignment.Right,
+                textString="PAO2"),                                                                                                                                                  Text(extent = {{-94, 16}, {0, 6}}, lineColor={0,0,255},     fillColor = {255, 255, 0},
+                  fillPattern =                                                                                                   FillPattern.Solid, fontSize=10,
+                  horizontalAlignment=TextAlignment.Left,
+                textString="VAi"),                                                                                                                                                 Text(extent = {{-46, 20}, {94, 4}}, lineColor={0,0,255},     fillColor = {255, 255, 0},
+                  fillPattern =                                                                                                   FillPattern.Solid, fontSize=10,
+                  horizontalAlignment=TextAlignment.Right,
+                textString="VAe"),                                                                                                                                                  Text(extent = {{-94, -14}, {52, -28}}, lineColor={0,0,255},     fillColor = {255, 255, 0},
+                  fillPattern =                                                                                                   FillPattern.Solid, fontSize=10,
+                  horizontalAlignment=TextAlignment.Left,
+                textString="VO2"),                                                                                                                                                 Text(extent = {{-94, -36}, {66, -50}}, lineColor={0,0,255},     fillColor = {255, 255, 0},
+                  fillPattern =                                                                                                   FillPattern.Solid, fontSize=10,
+                  horizontalAlignment=TextAlignment.Left,
+                textString="VCO2")}),                                                               Diagram(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}})));
       end AlvGases;
 
       model AlvEq
@@ -8026,6 +8050,106 @@ and mixing"), Text(
                 fillPattern=FillPattern.Solid)}),
                                     Diagram(coordinateSystem(preserveAspectRatio=false)));
       end flow_mmol_to_ml;
+
+      model AlvGases_debug
+        Physiolibrary.Types.RealIO.PressureOutput PAO2 annotation(Placement(transformation(extent = {{36, 41}, {50, 55}}), iconTransformation(extent = {{100, 46}, {120, 66}})));
+        Physiolibrary.Types.RealIO.PressureOutput PACO2 annotation(Placement(transformation(extent = {{36, 70}, {48, 82}}), iconTransformation(extent = {{100, 24}, {120, 44}})));
+        Physiolibrary.Types.RealIO.VolumeFlowRateInput VAi annotation(Placement(transformation(extent={{-106,42},
+                  {-76,72}}),                                                                                                   iconTransformation(extent = {{-6, -6}, {6, 6}}, rotation = 0, origin = {-106, 12})));
+        Physiolibrary.Types.RealIO.VolumeFlowRateOutput VAe annotation(Placement(transformation(extent = {{100, 2}, {120, 22}}), iconTransformation(extent = {{100, 2}, {120, 22}})));
+        Physiolibrary.Types.RealIO.MolarFlowRateInput VO2 annotation(Placement(transformation(extent={{-114,0},
+                  {-74,40}}),                                                                                                      iconTransformation(extent = {{-112, -26}, {-100, -14}})));
+        Physiolibrary.Types.RealIO.MolarFlowRateInput VCO2 annotation(Placement(transformation(extent={{-108,
+                  -42},{-68,-2}}),                                                                                                  iconTransformation(extent = {{-112, -46}, {-100, -34}})));
+        Real VAi_BTPS_l_per_min "inspired alveolar ventilation in l BTPS/min";
+        Real temp_cels "?core body temperature in ?C";
+        Real PB_mmHg "barometric pressure";
+        Real VO2_mmol_per_min(start = 11)
+          "rate of oxygen comsumption [mmol/min]";
+        Real VCO2_mmol_per_min(start = 10)
+          "rate of carbon dioxide production [mmol/min]";
+        Real PAO2_mmHg "alveolar pO2 [mmHg]";
+        Real PACO2_mmHg "alveolar PCO2 [mmHg]";
+        Real VAe_BTPS_l_per_min "expired alveolar ventilation in l BTPS/min";
+        outer Interfaces.ModelSettings modelSettings
+          annotation (Placement(transformation(extent={{-100,80},{-80,100}})));
+        Modelica.Blocks.Interfaces.RealOutput temp_cels_db annotation (Placement(
+              transformation(extent={{124,-62},{164,-22}}), iconTransformation(extent
+                ={{100,-38},{120,-18}})));
+        Modelica.Blocks.Interfaces.RealOutput PB_mmHg_db annotation (Placement(
+              transformation(extent={{124,-62},{164,-22}}), iconTransformation(extent={{100,-62},
+                  {120,-42}})));
+        Modelica.Blocks.Interfaces.RealOutput PAO2_mmHg_db annotation (Placement(
+              transformation(extent={{124,-62},{164,-22}}), iconTransformation(extent
+                ={{100,-88},{120,-68}})));
+        Modelica.Blocks.Interfaces.RealOutput PACO2_mmHg_db annotation (Placement(
+              transformation(extent={{124,-62},{164,-22}}), iconTransformation(extent
+                ={{100,-114},{120,-94}})));
+        Modelica.Blocks.Interfaces.RealOutput VAi_BTPS_l_per_min_db annotation (
+            Placement(transformation(extent={{124,-62},{164,-22}}),
+              iconTransformation(extent={{102,-136},{122,-116}})));
+        Modelica.Blocks.Interfaces.RealOutput VO2_mmol_per_min_db annotation (
+            Placement(transformation(extent={{124,-62},{164,-22}}),
+              iconTransformation(extent={{104,-158},{124,-138}})));
+        Modelica.Blocks.Interfaces.RealOutput VCO2_mmol_per_min_db annotation (
+            Placement(transformation(extent={{124,-62},{164,-22}}),
+              iconTransformation(extent={{104,-184},{124,-164}})));
+      algorithm
+        (PAO2_mmHg,PACO2_mmHg,VAe_BTPS_l_per_min) := OSA.AlveolarGases(
+                VAi_BTPS_l_per_min,
+                modelSettings.FiO2,
+                modelSettings.FiCO2,
+                temp_cels,
+                PB_mmHg,
+                VO2_mmol_per_min,
+                VCO2_mmol_per_min);
+      equation
+        temp_cels = modelSettings.Temperature - 273.15;
+        temp_cels_db=temp_cels;
+        //from grad C to grad K conversion
+        PB_mmHg = modelSettings.PB / 133.322365;
+        PB_mmHg = PB_mmHg_db;
+        // from mmHg to Pa conversion
+        PAO2_mmHg = PAO2 / 133.322365;
+        PAO2_mmHg = PAO2_mmHg_db;
+        // from mmHg to Pa conversion
+        PACO2_mmHg = PACO2 / 133.322365;
+        PACO2_mmHg = PACO2_mmHg_db;
+        // from mmHg to Pa conversion
+        VAi_BTPS_l_per_min = VAi * 60000;
+        VAi_BTPS_l_per_min=VAi_BTPS_l_per_min_db;
+        // from m^3/sec to l/min conversion
+        VAe = VAe_BTPS_l_per_min / 60000;
+        //from l/min to m^3/sec conversion
+        VO2 = VO2_mmol_per_min / 60 / 1000;
+        VO2_mmol_per_min = VO2_mmol_per_min_db;
+        //from mmol/min to mol/sec conversion
+        VCO2 = VCO2_mmol_per_min / 60 / 1000;
+        VCO2_mmol_per_min = VO2_mmol_per_min_db;
+        //from mmol/min to mol/sec conversion
+        annotation(Icon(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}}), graphics={  Rectangle(extent = {{-100, 100}, {100, -100}}, lineColor = {0, 0, 255}, fillColor = {255, 255, 0},
+                  fillPattern =                                                                                                   FillPattern.Solid), Text(extent={{-100,
+                    -56},{100,-100}},                                                                                                                                                        lineColor = {0, 0, 255}, fillColor = {255, 255, 0},
+                  fillPattern =                                                                                                   FillPattern.Solid, textString = "AlvGases"),   Text(extent = {{-46, 44}, {94, 24}}, lineColor={0,0,255},     fillColor = {255, 255, 0},
+                  fillPattern =                                                                                                   FillPattern.Solid, fontSize=10,
+                  horizontalAlignment=TextAlignment.Right,
+                textString="PACO2"),                                                                                                                                                  Text(extent = {{-80, 62}, {94, 52}}, lineColor={0,0,255},     fillColor = {255, 255, 0},
+                  fillPattern =                                                                                                   FillPattern.Solid, fontSize=10,
+                  horizontalAlignment=TextAlignment.Right,
+                textString="PAO2"),                                                                                                                                                  Text(extent = {{-94, 16}, {0, 6}}, lineColor={0,0,255},     fillColor = {255, 255, 0},
+                  fillPattern =                                                                                                   FillPattern.Solid, fontSize=10,
+                  horizontalAlignment=TextAlignment.Left,
+                textString="VAi"),                                                                                                                                                 Text(extent = {{-46, 20}, {94, 4}}, lineColor={0,0,255},     fillColor = {255, 255, 0},
+                  fillPattern =                                                                                                   FillPattern.Solid, fontSize=10,
+                  horizontalAlignment=TextAlignment.Right,
+                textString="VAe"),                                                                                                                                                  Text(extent = {{-94, -14}, {52, -28}}, lineColor={0,0,255},     fillColor = {255, 255, 0},
+                  fillPattern =                                                                                                   FillPattern.Solid, fontSize=10,
+                  horizontalAlignment=TextAlignment.Left,
+                textString="VO2"),                                                                                                                                                 Text(extent = {{-94, -36}, {66, -50}}, lineColor={0,0,255},     fillColor = {255, 255, 0},
+                  fillPattern =                                                                                                   FillPattern.Solid, fontSize=10,
+                  horizontalAlignment=TextAlignment.Left,
+                textString="VCO2")}),                                                               Diagram(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}})));
+      end AlvGases_debug;
     end OSA;
 
     model MembraneVariableCharges
@@ -13390,7 +13514,7 @@ initialization")}));
       parameter Boolean useIons = true;
       parameter Boolean useOsmoticFlow = true;
 
-      // respiratory settings
+      // respiratory settings --
       parameter Physiolibrary.Types.VolumeFlowRate NormalAlveolarVentilation = 7.68333e-5 annotation(Dialog(tab = "Respiration"));
       parameter Boolean UseRespiratoryCompensation = true annotation(Dialog(tab = "Respiration"));
       parameter Physiolibrary.Types.Fraction respiratoryQuotient = 0.85 annotation(Dialog(tab = "Respiration"));

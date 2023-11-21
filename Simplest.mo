@@ -505,6 +505,7 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
     end PO2test_;
 
     model TestVentilation_withoutStream_byIntegration
+         extends Modelica.Icons.Example;
       Physiolibrary.Types.Constants.VolumeFlowRateConst VAi(k(displayUnit=
               "l/min") = 8.3333333333333e-05)
         annotation (Placement(transformation(extent={{-97,64},{-89,70}})));
@@ -523,7 +524,7 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
       inner AcidBaseBalance.Interfaces.ModelSettings
                                      modelSettings(PB=101325.0144354,
           lungShuntFraction=0.05)
-        annotation (Placement(transformation(extent={{-98,80},{-78,100}})));
+        annotation (Placement(transformation(extent={{-100,80},{-80,100}})));
       AcidBaseBalance.Acidbase.OSA.AlvEq_2units_with_shunts_and_mixing alvEq_2units_with_shunts_and_mixing
         annotation (Placement(transformation(extent={{-40,8},{40,82}})));
       Physiolibrary.Types.Constants.ConcentrationConst BEox(k=0)
@@ -580,6 +581,39 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
       annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
             coordinateSystem(preserveAspectRatio=false)));
     end TestVentilation_withoutStream_byIntegration;
+
+    model TestAlveolarVentilation
+         extends Modelica.Icons.Example;
+      AcidBaseBalance.Acidbase.OSA.AlvGases alvGases
+        annotation (Placement(transformation(extent={{-26,12},{26,72}})));
+      Physiolibrary.Types.Constants.VolumeFlowRateConst VAi(k=
+            8.3333333333333e-05)
+        annotation (Placement(transformation(extent={{-92,54},{-74,72}})));
+      Physiolibrary.Types.Constants.MolarFlowRateConst MO2(k=
+            0.00018333333333333)
+        annotation (Placement(transformation(extent={{-90,22},{-72,42}})));
+      Physiolibrary.Types.Constants.FractionConst RQ(k(displayUnit="1") = 0.85)
+        annotation (Placement(transformation(extent={{-94,-6},{-74,12}})));
+      Modelica.Blocks.Math.Product product1
+        annotation (Placement(transformation(extent={{-60,12},{-48,24}})));
+      inner AcidBaseBalance.Interfaces.ModelSettings
+                                     modelSettings(PB=101325.0144354,
+          lungShuntFraction=0.05)
+        annotation (Placement(transformation(extent={{-94,78},{-74,98}})));
+    equation
+      connect(VAi.y, alvGases.VAi) annotation (Line(points={{-71.75,63},{-32,63},
+              {-32,45.6},{-27.56,45.6}}, color={0,0,127}));
+      connect(product1.y, alvGases.VCO2) annotation (Line(points={{-47.4,18},{
+              -32,18},{-32,30},{-27.56,30}}, color={0,0,127}));
+      connect(product1.u1, MO2.y) annotation (Line(points={{-61.2,21.6},{-66,
+              21.6},{-66,32},{-69.75,32}}, color={0,0,127}));
+      connect(RQ.y, product1.u2) annotation (Line(points={{-71.5,3},{-68,3},{
+              -68,14.4},{-61.2,14.4}}, color={0,0,127}));
+      connect(alvGases.VO2, MO2.y) annotation (Line(points={{-27.56,36},{-60,36},
+              {-60,32},{-69.75,32}}, color={0,0,127}));
+      annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
+            coordinateSystem(preserveAspectRatio=false)));
+    end TestAlveolarVentilation;
   end Test;
 
   model SimplestTissue
