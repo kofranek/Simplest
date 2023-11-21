@@ -144,112 +144,10 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
   end Alveolocapillary_2Units_with_shunts_and_mixing_direct_connectors;
 
   package Test
-    model TestVentilation
-      Alveolocapillary_2Units_with_shunts_and_mixing_direct_connectors
-        alveolocapillary_2Units_with_shunts_and_mixing_direct_connectors
-        annotation (Placement(transformation(extent={{-42,-28},{40,46}})));
-      AcidBaseBalance.Package.Junction_T junction_T(
-        useO2_input=true,
-        useCO2_input=true,
-        useFlow_input=false)
-        annotation (Placement(transformation(extent={{24,-86},{-12,-48}})));
-        AcidBaseBalance.BloodComponents.Pump
-                             leftHeart
-          annotation (Placement(transformation(extent={{-10,-10},{10,10}},
-              rotation=270,
-              origin={56,-32})));
-      Physiolibrary.Chemical.Sources.UnlimitedSolutePump CO2_MetabolicProduction(
-          SoluteFlow=0.00016666666666667)
-        annotation (Placement(transformation(extent={{-10,-102},{-30,-82}})));
-      Physiolibrary.Chemical.Sources.UnlimitedSolutePumpOut
-        O2_MetabolicConsumption(SoluteFlow=0.00018333333333333)
-        annotation (Placement(transformation(extent={{22,-110},{42,-90}})));
-      Physiolibrary.Types.Constants.VolumeFlowRateConst VAi(k(displayUnit=
-            "ml/min") = 8.25e-05)
-        annotation (Placement(transformation(extent={{-91,42},{-83,48}})));
-      Physiolibrary.Types.Constants.FractionConst FAi1(k=0.5)
-        annotation (Placement(transformation(extent={{-60,0},{-52,8}})));
-      Physiolibrary.Types.Constants.FractionConst Fq1(k=0.5)
-        annotation (Placement(transformation(extent={{-60,-16},{-52,-8}})));
-      Physiolibrary.Types.Constants.FractionConst Fsh(k=0.02)
-        annotation (Placement(transformation(extent={{-44,-34},{-36,-26}})));
-      Physiolibrary.Types.Constants.VolumeFlowRateConst CaridiacOutput(k(
-          displayUnit="l/min") = 8.3333333333333e-05)  annotation (Placement(
-            transformation(
-            extent={{-4,-4},{4,4}},
-            rotation=180,
-            origin={84,-30})));
-      inner AcidBaseBalance.Interfaces.ModelSettings
-                                     modelSettings(PB=106657.909932)
-        annotation (Placement(transformation(extent={{-92,70},{-72,90}})));
-      AcidBaseBalance.BloodComponents.BloodResistor
-                                    bloodResistor(Resistance=799934324490)
-        annotation (Placement(transformation(extent={{52,-80},{36,-56}})));
-      AcidBaseBalance.BloodComponents.BloodElasticVesselCompliance
-        bloodElasticVesselCompliance
-        annotation (Placement(transformation(extent={{60,-60},{80,-40}})));
-    equation
-      connect(junction_T.bloodPort_out,
-        alveolocapillary_2Units_with_shunts_and_mixing_direct_connectors.bloodPort_in)
-        annotation (Line(
-          points={{-12,-67},{-68,-67},{-68,31.2},{-14.94,31.2}},
-          color={28,108,200},
-          thickness=1));
-      connect(leftHeart.bloodPort_in,
-        alveolocapillary_2Units_with_shunts_and_mixing_direct_connectors.bloodPort_out)
-        annotation (Line(
-          points={{56,-23},{56,30},{8.84,30},{8.84,31.94}},
-          color={28,108,200},
-          thickness=1));
-      connect(O2_MetabolicConsumption.q_in, junction_T.port_O2) annotation (
-          Line(
-          points={{22,-100},{18,-100},{18,-67},{17.16,-67}},
-          color={107,45,134},
-          thickness=1));
-      connect(CO2_MetabolicProduction.q_out, junction_T.port_CO2) annotation (
-          Line(
-          points={{-30,-92},{-42,-92},{-42,-78},{10.68,-78},{10.68,-67}},
-          color={107,45,134},
-          thickness=1));
-      connect(alveolocapillary_2Units_with_shunts_and_mixing_direct_connectors.VAi,
-        VAi.y) annotation (Line(points={{-25.19,18.99},{-54,18.99},{-54,45},{
-              -82,45}}, color={0,0,127}));
-      connect(FAi1.y,
-        alveolocapillary_2Units_with_shunts_and_mixing_direct_connectors.F_VAi1)
-        annotation (Line(points={{-51,4},{-40,4},{-40,4.19},{-30.11,4.19}},
-            color={0,0,127}));
-      connect(Fq1.y,
-        alveolocapillary_2Units_with_shunts_and_mixing_direct_connectors.F_q1)
-        annotation (Line(points={{-51,-12},{-42,-12},{-42,-3.21},{-30.11,-3.21}},
-            color={0,0,127}));
-      connect(Fsh.y,
-        alveolocapillary_2Units_with_shunts_and_mixing_direct_connectors.Fsh)
-        annotation (Line(points={{-35,-30},{-26,-30},{-26,-19.49},{-15.35,
-              -19.49}}, color={0,0,127}));
-      connect(CaridiacOutput.y, leftHeart.volumeFlowRate) annotation (Line(
-            points={{79,-30},{70,-30},{70,-32},{60,-32}}, color={0,0,127}));
-      connect(junction_T.bloodPort_in, bloodResistor.bloodPort_out) annotation (
-         Line(
-          points={{23.64,-67},{29.82,-67},{29.82,-68},{36.8,-68}},
-          color={28,108,200},
-          thickness=1));
-      connect(leftHeart.bloodPort_out, bloodElasticVesselCompliance.bloodPort_in)
-        annotation (Line(
-          points={{56,-41},{56,-50},{60.2,-50}},
-          color={28,108,200},
-          thickness=1));
-      connect(bloodElasticVesselCompliance.bloodPort_out, bloodResistor.bloodPort_in)
-        annotation (Line(
-          points={{80,-50},{82,-50},{82,-68},{51.2,-68}},
-          color={28,108,200},
-          thickness=1));
-      annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
-            coordinateSystem(preserveAspectRatio=false)));
-    end TestVentilation;
 
     model TestVentilation_withoutStream
       Physiolibrary.Types.Constants.VolumeFlowRateConst VAi(k(displayUnit=
-              "l/min") = 8.3333333333333e-5)
+              "l/min") = 8.3333333333333e-05)
         annotation (Placement(transformation(extent={{-97,64},{-89,70}})));
       Physiolibrary.Types.Constants.FractionConst FAi1(k=0.5)
         annotation (Placement(transformation(extent={{-68,14},{-60,22}})));
@@ -258,13 +156,15 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
       Physiolibrary.Types.Constants.FractionConst Fsh(k=0.02)
         annotation (Placement(transformation(extent={{-64,36},{-56,44}})));
       Physiolibrary.Types.Constants.VolumeFlowRateConst CardiacOutput(k(
-            displayUnit="l/min") = 8.3333333333333e-5) annotation (Placement(
+            displayUnit="l/min") = 8.3333333333333e-05)
+                                                       annotation (Placement(
             transformation(
             extent={{4,4},{-4,-4}},
             rotation=180,
             origin={-90,56})));
       inner AcidBaseBalance.Interfaces.ModelSettings
-                                     modelSettings(PB=106657.909932)
+                                     modelSettings(PB=101325.0144354,
+          lungShuntFraction=0.05)
         annotation (Placement(transformation(extent={{-98,80},{-78,100}})));
       AcidBaseBalance.Acidbase.OSA.AlvEq_2units_with_shunts_and_mixing alvEq_2units_with_shunts_and_mixing
         annotation (Placement(transformation(extent={{-40,8},{40,82}})));
@@ -272,51 +172,54 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
         annotation (Placement(transformation(extent={{-66,78},{-58,86}})));
       Physiolibrary.Types.Constants.MolarFlowRateConst VO2(k=
             0.00018333333333333)
-        annotation (Placement(transformation(extent={{-78,-50},{-70,-42}})));
+        annotation (Placement(transformation(extent={{-88,-50},{-80,-42}})));
       Physiolibrary.Types.Constants.MolarFlowRateConst VCO2(k=
             0.00016666666666667)
         annotation (Placement(transformation(extent={{-80,-68},{-72,-60}})));
       SimplestTissue simplestTissue
-        annotation (Placement(transformation(extent={{-32,-60},{22,-14}})));
+        annotation (Placement(transformation(extent={{-32,-62},{22,-16}})));
     equation
       connect(VAi.y, alvEq_2units_with_shunts_and_mixing.VAi) annotation (Line(
             points={{-88,67},{-62,67},{-62,61.65},{-39.3043,61.65}}, color={0,0,
               127}));
       connect(alvEq_2units_with_shunts_and_mixing.Q, CardiacOutput.y)
         annotation (Line(points={{-39.3043,58.875},{-42.6521,58.875},{-42.6521,
-            56},{-85,56}},   color={0,0,127}));
+              56},{-85,56}}, color={0,0,127}));
       connect(alvEq_2units_with_shunts_and_mixing.Fsh, Fsh.y) annotation (Line(
             points={{-39.4783,40.6063},{-46.7391,40.6063},{-46.7391,40},{-55,40}},
             color={0,0,127}));
       connect(Fq1.y, alvEq_2units_with_shunts_and_mixing.F_q1) annotation (Line(
-            points={{-63,32},{-52,32},{-52,32.2813},{-39.4783,32.2813}}, color=
+            points={{-63,32},{-52,32},{-52,32.2812},{-39.4783,32.2812}}, color=
               {0,0,127}));
       connect(alvEq_2units_with_shunts_and_mixing.F_VAi1, FAi1.y) annotation (
-          Line(points={{-39.8261,23.0313},{-55.913,23.0313},{-55.913,18},{-59,
-            18}},   color={0,0,127}));
+          Line(points={{-39.8261,23.0312},{-55.913,23.0312},{-55.913,18},{-59,
+              18}}, color={0,0,127}));
       connect(BEox.y, alvEq_2units_with_shunts_and_mixing.BEox) annotation (
           Line(points={{-57,82},{-48,82},{-48,68.125},{-40,68.125}}, color={0,0,
               127}));
       connect(simplestTissue.O2a, alvEq_2units_with_shunts_and_mixing.ctO2a)
-        annotation (Line(points={{-32,-17.22},{-48,-17.22},{-48,-4},{66,-4},{66,
-            38.7563},{41.5652,38.7563}},   color={0,0,127}));
+        annotation (Line(points={{-32,-19.22},{-48,-19.22},{-48,-4},{66,-4},{66,
+              38.7563},{41.5652,38.7563}}, color={0,0,127}));
       connect(simplestTissue.CO2a, alvEq_2units_with_shunts_and_mixing.ctCO2a)
-        annotation (Line(points={{-32,-22.74},{-56,-22.74},{-56,0},{58,0},{58,
-            34.5938},{41.5652,34.5938}},   color={0,0,127}));
-      connect(simplestTissue.Q, CardiacOutput.y) annotation (Line(points={{
-              -32.81,-37.23},{-76,-37.23},{-76,56},{-85,56}}, color={0,0,127}));
-      connect(VO2.y, simplestTissue.MO2) annotation (Line(points={{-69,-46},{
-              -52,-46},{-52,-45.05},{-33.35,-45.05}}, color={0,0,127}));
+        annotation (Line(points={{-32,-24.74},{-56,-24.74},{-56,0},{58,0},{58,
+              34.5938},{41.5652,34.5938}}, color={0,0,127}));
+      connect(simplestTissue.Q, CardiacOutput.y) annotation (Line(points={{-32.81,
+              -39.23},{-76,-39.23},{-76,56},{-85,56}},        color={0,0,127}));
+      connect(VO2.y, simplestTissue.MO2) annotation (Line(points={{-79,-46},{
+              -56.175,-46},{-56.175,-47.05},{-33.35,-47.05}},
+                                                      color={0,0,127}));
       connect(VCO2.y, simplestTissue.MCO2) annotation (Line(points={{-71,-64},{
-              -54,-64},{-54,-52.41},{-32.81,-52.41}}, color={0,0,127}));
+              -54,-64},{-54,-54.41},{-32.81,-54.41}}, color={0,0,127}));
       connect(simplestTissue.O2v, alvEq_2units_with_shunts_and_mixing.CvO2)
-        annotation (Line(points={{21.46,-17.68},{28,-17.68},{28,2},{-86,2},{-86,
-            53.325},{-39.3043,53.325}},   color={0,0,127}));
+        annotation (Line(points={{24.16,-17.38},{28,-17.38},{28,2},{-86,2},{-86,
+              54.0187},{-40.1739,54.0187}},
+                                          color={0,0,127}));
       connect(simplestTissue.CO2v, alvEq_2units_with_shunts_and_mixing.CvCO2)
-        annotation (Line(points={{21.46,-22.74},{32,-22.74},{32,6},{-82,6},{-82,
-            50.55},{-39.3043,50.55}},   color={0,0,127}));
+        annotation (Line(points={{24.16,-21.98},{32,-21.98},{32,6},{-82,6},{-82,
+              48.0063},{-39.8261,48.0063}},
+                                        color={0,0,127}));
       connect(simplestTissue.BEox, alvEq_2units_with_shunts_and_mixing.BEox)
-        annotation (Line(points={{-32,-28.26},{-74,-28.26},{-74,70},{-48,70},{
+        annotation (Line(points={{-32,-30.26},{-74,-30.26},{-74,70},{-48,70},{
               -48,68.125},{-40,68.125}}, color={0,0,127}));
       annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
             coordinateSystem(preserveAspectRatio=false)));
@@ -335,16 +238,16 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
       connect(BEox.y, pO2PCO2_by_integration.BEox)
         annotation (Line(points={{-65,22},{-34.5333,21.1}}, color={0,0,127}));
       connect(PO2.y, pO2PCO2_by_integration.pO2) annotation (Line(points={{-71,58},
-            {-33.6,58},{-33.6,58.6667}},  color={0,0,127}));
+              {-33.6,58},{-33.6,58.6667}},color={0,0,127}));
       connect(PCO2.y, pO2PCO2_by_integration.pCO2) annotation (Line(points={{-71,38},
-            {-33.6,38},{-33.6,38.7333}},   color={0,0,127}));
+              {-33.6,38},{-33.6,38.7333}}, color={0,0,127}));
       annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
             coordinateSystem(preserveAspectRatio=false)));
     end PO2PCO2test;
 
     model PO2test
       AcidBaseBalance.Acidbase.OSA.PO2PCO2_by_integration pO2PCO2_by_integration
-        annotation (Placement(transformation(extent={{-28,-18},{56,74}})));
+        annotation (Placement(transformation(extent={{-28,-16},{56,76}})));
       Physiolibrary.Types.Constants.ConcentrationConst BEox(k=0)
         annotation (Placement(transformation(extent={{-74,18},{-66,26}})));
       Physiolibrary.Types.Constants.PressureConst PO2(k=13332.2387415)
@@ -356,23 +259,24 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
     Modelica.Blocks.Math.Product product1
       annotation (Placement(transformation(extent={{-36,-58},{-16,-38}})));
     Modelica.Blocks.Sources.Ramp ramp(height=200, duration=200)
-      annotation (Placement(transformation(extent={{-84,-84},{-64,-64}})));
+      annotation (Placement(transformation(extent={{-90,-66},{-70,-46}})));
     Modelica.Blocks.Continuous.Derivative derivative(T=0.1)
       annotation (Placement(transformation(extent={{84,54},{104,74}})));
     equation
       connect(BEox.y, pO2PCO2_by_integration.BEox)
-        annotation (Line(points={{-65,22},{-34.5333,21.1}}, color={0,0,127}));
+        annotation (Line(points={{-65,22},{-34.5333,23.1}}, color={0,0,127}));
       connect(PCO2.y, pO2PCO2_by_integration.pCO2) annotation (Line(points={{-71,38},
-              {-33.6,38},{-33.6,38.7333}}, color={0,0,127}));
+              {-33.6,38},{-33.6,40.7333}}, color={0,0,127}));
     connect(PO1.y, product1.u1)
       annotation (Line(points={{-45,-42},{-38,-42}}, color={0,0,127}));
-    connect(ramp.y, product1.u2) annotation (Line(points={{-63,-74},{-44,-74},{
-            -44,-54},{-38,-54}}, color={0,0,127}));
+    connect(ramp.y, product1.u2) annotation (Line(points={{-69,-56},{-46,-56},{
+              -46,-62},{-38,-62},{-38,-54}},
+                                 color={0,0,127}));
     connect(product1.y, pO2PCO2_by_integration.pO2) annotation (Line(points={{-15,-48},
-              {6,-48},{6,-14},{-84,-14},{-84,58.6667},{-33.6,58.6667}},
+              {6,-48},{6,-14},{-84,-14},{-84,60.6667},{-33.6,60.6667}},
           color={0,0,127}));
     connect(pO2PCO2_by_integration.ctO2, derivative.u) annotation (Line(points={{69.0667,
-              63.2667},{82,63.2667},{82,64}},         color={0,0,127}));
+              65.2667},{82,65.2667},{82,64}},         color={0,0,127}));
       annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
             coordinateSystem(preserveAspectRatio=false)),
       experiment(
@@ -421,6 +325,186 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
         __Dymola_NumberOfIntervals=5000,
         __Dymola_Algorithm="Dassl"));
     end PCO2test;
+
+    model TestPulmonaryVentilation
+      Physiolibrary.Types.Constants.VolumeFlowRateConst VAi(k(displayUnit=
+              "l/min") = 8.3333333333333e-05)
+        annotation (Placement(transformation(extent={{-97,64},{-89,70}})));
+      Physiolibrary.Types.Constants.FractionConst FAi1(k=0.5)
+        annotation (Placement(transformation(extent={{-48,0},{-40,8}})));
+      Physiolibrary.Types.Constants.FractionConst Fq1(k=0.5)
+        annotation (Placement(transformation(extent={{-50,16},{-42,24}})));
+      Physiolibrary.Types.Constants.FractionConst Fsh(k=0.02)
+        annotation (Placement(transformation(extent={{-52,26},{-44,34}})));
+      Physiolibrary.Types.Constants.VolumeFlowRateConst CardiacOutput(k(
+            displayUnit="l/min") = 8.3333333333333e-05)
+                                                       annotation (Placement(
+            transformation(
+            extent={{4,4},{-4,-4}},
+            rotation=180,
+            origin={-90,56})));
+      inner AcidBaseBalance.Interfaces.ModelSettings
+                                     modelSettings(
+        PB=101325.0144354,
+        lungShuntFraction=0.05,
+        ctHb=11)
+        annotation (Placement(transformation(extent={{-98,80},{-78,100}})));
+      AcidBaseBalance.Acidbase.OSA.AlvEq_2units_with_shunts_and_mixing alvEq_2units_with_shunts_and_mixing
+        annotation (Placement(transformation(extent={{-24,4},{56,78}})));
+      Physiolibrary.Types.Constants.ConcentrationConst BEox(k=0)
+        annotation (Placement(transformation(extent={{-78,78},{-70,86}})));
+      Physiolibrary.Types.Constants.PressureConst PvO2(k=5332.8954966)
+        annotation (Placement(transformation(extent={{-128,-72},{-112,-54}})));
+      Physiolibrary.Types.Constants.PressureConst PvCO2(k=6286.1505666173)
+        annotation (Placement(transformation(extent={{-130,-108},{-114,-90}})));
+      Physiolibrary.Types.Constants.ConcentrationConst CO2v(k=23.5)
+        annotation (Placement(transformation(extent={{-98,0},{-76,16}})));
+      Physiolibrary.Types.Constants.ConcentrationConst O2v(k=6.05)
+        annotation (Placement(transformation(extent={{-102,24},{-80,40}})));
+      AcidBaseBalance.Acidbase.OSA.PO2PCO2 pO2PCO2_1
+        annotation (Placement(transformation(extent={{-44,-160},{50,-68}})));
+    equation
+      connect(VAi.y, alvEq_2units_with_shunts_and_mixing.VAi) annotation (Line(
+            points={{-88,67},{-50,67},{-50,57.65},{-23.3043,57.65}}, color={0,0,
+              127}));
+      connect(alvEq_2units_with_shunts_and_mixing.Q, CardiacOutput.y)
+        annotation (Line(points={{-23.3043,54.875},{-30,54.875},{-30,56},{-85,
+              56}},          color={0,0,127}));
+      connect(alvEq_2units_with_shunts_and_mixing.Fsh, Fsh.y) annotation (Line(
+            points={{-23.4783,36.6063},{-43,36.6063},{-43,30}},
+            color={0,0,127}));
+      connect(Fq1.y, alvEq_2units_with_shunts_and_mixing.F_q1) annotation (Line(
+            points={{-41,20},{-32.2391,20},{-32.2391,28.2812},{-23.4783,28.2812}},
+                                                                         color=
+              {0,0,127}));
+      connect(alvEq_2units_with_shunts_and_mixing.F_VAi1, FAi1.y) annotation (
+          Line(points={{-23.8261,19.0312},{-34,19.0312},{-34,4},{-39,4}},
+                    color={0,0,127}));
+      connect(BEox.y, alvEq_2units_with_shunts_and_mixing.BEox) annotation (
+          Line(points={{-69,82},{-40,82},{-40,64.125},{-24,64.125}}, color={0,0,
+              127}));
+      connect(pO2PCO2_1.BEox, alvEq_2units_with_shunts_and_mixing.BEox)
+        annotation (Line(points={{-48.1778,-136.233},{-58,-136.233},{-58,70},{
+              -40,70},{-40,64.125},{-24,64.125}}, color={0,0,127}));
+      connect(pO2PCO2_1.ctCO2, alvEq_2units_with_shunts_and_mixing.CvCO2)
+        annotation (Line(points={{65.6667,-84.1},{56,-84.1},{56,-4},{-56,-4},{
+              -56,44.0063},{-23.8261,44.0063}}, color={0,0,127}));
+      connect(PvCO2.y, pO2PCO2_1.pCO2) annotation (Line(points={{-112,-99},{
+              -112,-100},{-50,-100},{-50,-97.9},{-49.2222,-97.9}}, color={0,0,
+              127}));
+      connect(PvO2.y, pO2PCO2_1.pO2) annotation (Line(points={{-110,-63},{-110,
+              -70},{-49.2222,-70},{-49.2222,-73.3667}}, color={0,0,127}));
+      annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{
+                -120,-200},{100,100}})),                             Diagram(
+            coordinateSystem(preserveAspectRatio=false, extent={{-120,-200},{
+                100,100}})));
+    end TestPulmonaryVentilation;
+
+    model PO2test_
+      Physiolibrary.Types.Constants.PressureConst PO2(k=5332.8954966)
+        annotation (Placement(transformation(extent={{-84,8},{-76,16}})));
+      AcidBaseBalance.Acidbase.OSA.PO2PCO2 pO2PCO2_2
+        annotation (Placement(transformation(extent={{-30,-72},{50,18}})));
+      Physiolibrary.Types.Constants.PressureConst PCO2(k=5332.8954966)
+        annotation (Placement(transformation(extent={{-74,-16},{-66,-8}})));
+      Physiolibrary.Types.Constants.ConcentrationConst BEox(k=0)
+        annotation (Placement(transformation(extent={{-78,-52},{-70,-44}})));
+      inner AcidBaseBalance.Interfaces.ModelSettings
+                                     modelSettings(PB=101325.0144354,
+          lungShuntFraction=0.05)
+        annotation (Placement(transformation(extent={{-70,66},{-50,86}})));
+    equation
+      connect(PCO2.y, pO2PCO2_2.pCO2) annotation (Line(points={{-65,-12},{
+              -49.7222,-12},{-49.7222,-11.25},{-34.4444,-11.25}}, color={0,0,
+              127}));
+      connect(BEox.y, pO2PCO2_2.BEox) annotation (Line(points={{-69,-48},{-42,
+              -48},{-42,-48.75},{-33.5556,-48.75}}, color={0,0,127}));
+      connect(PO2.y, pO2PCO2_2.pO2) annotation (Line(points={{-75,12},{-42,12},
+              {-42,12.75},{-34.4444,12.75}}, color={0,0,127}));
+      annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
+            coordinateSystem(preserveAspectRatio=false)),
+      experiment(
+        StopTime=200,
+        __Dymola_NumberOfIntervals=5000,
+        __Dymola_Algorithm="Dassl"));
+    end PO2test_;
+
+    model TestVentilation_withoutStream_byIntegration
+      Physiolibrary.Types.Constants.VolumeFlowRateConst VAi(k(displayUnit=
+              "l/min") = 8.3333333333333e-05)
+        annotation (Placement(transformation(extent={{-97,64},{-89,70}})));
+      Physiolibrary.Types.Constants.FractionConst FAi1(k=0.5)
+        annotation (Placement(transformation(extent={{-68,14},{-60,22}})));
+      Physiolibrary.Types.Constants.FractionConst Fq1(k=0.5)
+        annotation (Placement(transformation(extent={{-54,28},{-46,36}})));
+      Physiolibrary.Types.Constants.FractionConst Fsh(k=0.02)
+        annotation (Placement(transformation(extent={{-64,36},{-56,44}})));
+      Physiolibrary.Types.Constants.VolumeFlowRateConst CardiacOutput(k(
+            displayUnit="l/min") = 8.3333333333333e-5) annotation (Placement(
+            transformation(
+            extent={{4,4},{-4,-4}},
+            rotation=180,
+            origin={-90,56})));
+      inner AcidBaseBalance.Interfaces.ModelSettings
+                                     modelSettings(PB=101325.0144354,
+          lungShuntFraction=0.05)
+        annotation (Placement(transformation(extent={{-98,80},{-78,100}})));
+      AcidBaseBalance.Acidbase.OSA.AlvEq_2units_with_shunts_and_mixing alvEq_2units_with_shunts_and_mixing
+        annotation (Placement(transformation(extent={{-40,8},{40,82}})));
+      Physiolibrary.Types.Constants.ConcentrationConst BEox(k=0)
+        annotation (Placement(transformation(extent={{-96,72},{-88,80}})));
+      Physiolibrary.Types.Constants.MolarFlowRateConst VO2(k=
+            0.00018333333333333)
+        annotation (Placement(transformation(extent={{-82,-58},{-74,-50}})));
+      Physiolibrary.Types.Constants.MolarFlowRateConst VCO2(k=
+            0.00016666666666667)
+        annotation (Placement(transformation(extent={{-80,-74},{-72,-66}})));
+      SimplestTissueIntgr simplestTissueIntgr
+        annotation (Placement(transformation(extent={{-34,-80},{34,-12}})));
+    equation
+      connect(VAi.y, alvEq_2units_with_shunts_and_mixing.VAi) annotation (Line(
+            points={{-88,67},{-62,67},{-62,61.65},{-39.3043,61.65}}, color={0,0,
+              127}));
+      connect(alvEq_2units_with_shunts_and_mixing.Q, CardiacOutput.y)
+        annotation (Line(points={{-39.3043,58.875},{-42.6521,58.875},{-42.6521,
+              56},{-85,56}}, color={0,0,127}));
+      connect(alvEq_2units_with_shunts_and_mixing.Fsh, Fsh.y) annotation (Line(
+            points={{-39.4783,40.6063},{-46.7391,40.6063},{-46.7391,40},{-55,40}},
+            color={0,0,127}));
+      connect(Fq1.y, alvEq_2units_with_shunts_and_mixing.F_q1) annotation (Line(
+            points={{-45,32},{-52,32},{-52,32.2812},{-39.4783,32.2812}}, color=
+              {0,0,127}));
+      connect(alvEq_2units_with_shunts_and_mixing.F_VAi1, FAi1.y) annotation (
+          Line(points={{-39.8261,23.0312},{-55.913,23.0312},{-55.913,18},{-59,
+              18}}, color={0,0,127}));
+      connect(BEox.y, alvEq_2units_with_shunts_and_mixing.BEox) annotation (
+          Line(points={{-87,76},{-46,76},{-46,68.125},{-40,68.125}}, color={0,0,
+              127}));
+      connect(alvEq_2units_with_shunts_and_mixing.ctO2a, simplestTissueIntgr.O2a)
+        annotation (Line(points={{41.5652,38.7563},{60,38.7563},{60,0},{-54,0},
+              {-54,-16.76},{-34,-16.76}}, color={0,0,127}));
+      connect(alvEq_2units_with_shunts_and_mixing.ctCO2a, simplestTissueIntgr.CO2a)
+        annotation (Line(points={{41.5652,34.5938},{52,34.5938},{52,4},{-58,4},
+              {-58,-24.92},{-34,-24.92}}, color={0,0,127}));
+      connect(simplestTissueIntgr.BEox, alvEq_2units_with_shunts_and_mixing.BEox)
+        annotation (Line(points={{-34,-33.08},{-82,-33.08},{-82,76},{-46,76},{
+              -46,68.125},{-40,68.125}}, color={0,0,127}));
+      connect(simplestTissueIntgr.Q, CardiacOutput.y) annotation (Line(points={
+              {-35.02,-46.34},{-78,-46.34},{-78,38},{-76,56},{-85,56}}, color={
+              0,0,127}));
+      connect(VCO2.y, simplestTissueIntgr.MCO2) annotation (Line(points={{-71,
+              -70},{-44,-70},{-44,-68.78},{-35.02,-68.78}}, color={0,0,127}));
+      connect(VO2.y, simplestTissueIntgr.MO2) annotation (Line(points={{-73,-54},
+              {-46,-54},{-46,-57.9},{-35.7,-57.9}}, color={0,0,127}));
+      connect(alvEq_2units_with_shunts_and_mixing.CvO2, simplestTissueIntgr.O2v)
+        annotation (Line(points={{-40.1739,54.0187},{-74,54.0187},{-74,-4},{50,
+              -4},{50,-14.04},{36.72,-14.04}}, color={0,0,127}));
+      connect(alvEq_2units_with_shunts_and_mixing.CvCO2, simplestTissueIntgr.CO2v)
+        annotation (Line(points={{-39.8261,48.0063},{-70,48.0063},{-70,-6},{60,
+              -6},{60,-20.84},{36.72,-20.84}}, color={0,0,127}));
+      annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
+            coordinateSystem(preserveAspectRatio=false)));
+    end TestVentilation_withoutStream_byIntegration;
   end Test;
 
   model SimplestTissue
@@ -446,11 +530,11 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
           transformation(extent={{-100,54},{-86,68}}),  iconTransformation(extent={{-110,52},
               {-90,72}})));
     Physiolibrary.Types.RealIO.ConcentrationOutput CO2v annotation (Placement(
-          transformation(extent={{24,58},{36,70}}),     iconTransformation(extent=
-             {{88,52},{108,72}})));
+          transformation(extent={{24,58},{36,70}}),     iconTransformation(extent={{98,64},
+              {118,84}})));
     Physiolibrary.Types.RealIO.ConcentrationOutput O2v annotation (Placement(
-          transformation(extent={{18,68},{30,80}}),     iconTransformation(extent=
-             {{88,74},{108,94}})));
+          transformation(extent={{18,68},{30,80}}),     iconTransformation(extent={{98,84},
+              {118,104}})));
     BloodGases bloodGases
       annotation (Placement(transformation(extent={{-52,32},{-8,74}})));
     AcidBaseBalance.Acidbase.OSA.O2CO2
@@ -461,10 +545,10 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
               {{-110,28},{-90,48}})));
     Physiolibrary.Types.RealIO.PressureOutput pO2_v(start=13300) annotation (
         Placement(transformation(extent={{88,20},{102,34}}), iconTransformation(
-            extent={{90,14},{110,34}})));
+            extent={{98,44},{118,64}})));
     Physiolibrary.Types.RealIO.PressureOutput pCO2_v(start=5333) annotation (
         Placement(transformation(extent={{90,12},{104,26}}), iconTransformation(
-            extent={{90,-6},{110,14}})));
+            extent={{98,24},{118,44}})));
     Physiolibrary.Types.RealIO.pHOutput pH_v(start=7.4) annotation (Placement(
           transformation(
           extent={{-7,-7},{7,7}},
@@ -472,7 +556,7 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
           origin={95,9}), iconTransformation(
           extent={{-10,-10},{10,10}},
           rotation=0,
-          origin={100,-20})));
+          origin={108,14})));
     Physiolibrary.Types.RealIO.ConcentrationOutput cHCO3_v(displayUnit="mmol/l")
       "outgoing concentration of HCO3" annotation (Placement(transformation(
           extent={{-7,-7},{7,7}},
@@ -480,7 +564,7 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
           origin={97,-2}), iconTransformation(
           extent={{-10,-10},{10,10}},
           rotation=0,
-          origin={100,-40})));
+          origin={110,-4})));
     Physiolibrary.Types.RealIO.FractionOutput sO2_v annotation (Placement(
           transformation(
           extent={{-6,-6},{6,6}},
@@ -488,9 +572,20 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
           origin={96,-12}), iconTransformation(
           extent={{-10,-10},{10,10}},
           rotation=0,
-          origin={100,-60})));
+          origin={110,-24})));
+    Physiolibrary.Types.RealIO.MolarFlowRateOutput DO2 annotation (Placement(
+          transformation(extent={{86,-68},{106,-48}}), iconTransformation(extent={{100,-54},
+              {120,-34}})));
+    Physiolibrary.Types.RealIO.MolarFlowRateOutput DCO2 annotation (Placement(
+          transformation(extent={{88,-86},{108,-66}}), iconTransformation(extent={
+              {100,-98},{120,-78}})));
+    Physiolibrary.Types.RealIO.FractionOutput OER annotation (Placement(
+          transformation(extent={{90,-96},{110,-76}}),    iconTransformation(
+            extent={{100,-76},{120,-56}})));
   equation
-
+    DO2=O2a*Q;
+    OER=MO2/DO2;
+    DCO2=CO2v*Q;
     connect(O2a, bloodGases.O2a) annotation (Line(points={{-91,73},{-72.5,73},{
             -72.5,71.06},{-52,71.06}}, color={0,0,127}));
     connect(bloodGases.CO2a, CO2a) annotation (Line(points={{-52,66.44},{-74,
@@ -941,10 +1036,133 @@ package Simplest "simplest acid-base and electrolyte homesostasis"
             textString="%name")}),                                                                                                 Diagram(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}})));
   end SimplestTissueAndSID;
 
+  model SimplestTissueIntgr
+
+    Physiolibrary.Types.RealIO.MolarFlowRateInput MCO2 annotation (Placement(
+          transformation(extent={{-100,12},{-88,24}}), iconTransformation(
+          extent={{-11,-11},{11,11}},
+          rotation=0,
+          origin={-103,-67})));
+    Physiolibrary.Types.RealIO.MolarFlowRateInput MO2 annotation (Placement(
+          transformation(extent={{-100,24},{-88,36}}), iconTransformation(
+          extent={{-11,-11},{11,11}},
+          rotation=0,
+          origin={-105,-35})));
+
+    Physiolibrary.Types.RealIO.VolumeFlowRateInput Q annotation (Placement(
+          transformation(extent={{-102,36},{-86,52}}),   iconTransformation(
+            extent={{-114,-12},{-92,10}})));
+    Physiolibrary.Types.RealIO.ConcentrationInput O2a annotation (Placement(
+          transformation(extent={{-98,66},{-84,80}}),   iconTransformation(extent=
+             {{-110,76},{-90,96}})));
+    Physiolibrary.Types.RealIO.ConcentrationInput CO2a annotation (Placement(
+          transformation(extent={{-100,54},{-86,68}}),  iconTransformation(extent={{-110,52},
+              {-90,72}})));
+    Physiolibrary.Types.RealIO.ConcentrationOutput CO2v annotation (Placement(
+          transformation(extent={{24,58},{36,70}}),     iconTransformation(extent={{98,64},
+              {118,84}})));
+    Physiolibrary.Types.RealIO.ConcentrationOutput O2v annotation (Placement(
+          transformation(extent={{18,68},{30,80}}),     iconTransformation(extent={{98,84},
+              {118,104}})));
+    BloodGases bloodGases
+      annotation (Placement(transformation(extent={{-58,32},{-14,74}})));
+    Physiolibrary.Types.RealIO.ConcentrationInput BEox annotation (Placement(
+          transformation(extent={{-28,-20},{-14,-6}}),
+                                                     iconTransformation(extent=
+              {{-110,28},{-90,48}})));
+    Physiolibrary.Types.RealIO.PressureOutput pO2_v(start=13300) annotation (
+        Placement(transformation(extent={{86,20},{100,34}}), iconTransformation(
+            extent={{98,44},{118,64}})));
+    Physiolibrary.Types.RealIO.PressureOutput pCO2_v(start=5333) annotation (
+        Placement(transformation(extent={{98,14},{112,28}}), iconTransformation(
+            extent={{98,24},{118,44}})));
+    Physiolibrary.Types.RealIO.pHOutput pH_v(start=7.4) annotation (Placement(
+          transformation(
+          extent={{-7,-7},{7,7}},
+          rotation=0,
+          origin={93,11}),iconTransformation(
+          extent={{-10,-10},{10,10}},
+          rotation=0,
+          origin={108,14})));
+    Physiolibrary.Types.RealIO.ConcentrationOutput cHCO3_v(displayUnit="mmol/l")
+      "outgoing concentration of HCO3" annotation (Placement(transformation(
+          extent={{-7,-7},{7,7}},
+          rotation=0,
+          origin={97,4}),  iconTransformation(
+          extent={{-10,-10},{10,10}},
+          rotation=0,
+          origin={110,-4})));
+    Physiolibrary.Types.RealIO.FractionOutput sO2_v annotation (Placement(
+          transformation(
+          extent={{-6,-6},{6,6}},
+          rotation=0,
+          origin={96,-12}), iconTransformation(
+          extent={{-10,-10},{10,10}},
+          rotation=0,
+          origin={110,-24})));
+    Physiolibrary.Types.RealIO.MolarFlowRateOutput DO2 annotation (Placement(
+          transformation(extent={{86,-68},{106,-48}}), iconTransformation(extent={{100,-54},
+              {120,-34}})));
+    Physiolibrary.Types.RealIO.MolarFlowRateOutput DCO2 annotation (Placement(
+          transformation(extent={{88,-86},{108,-66}}), iconTransformation(extent={
+              {100,-98},{120,-78}})));
+    Physiolibrary.Types.RealIO.FractionOutput OER annotation (Placement(
+          transformation(extent={{90,-96},{110,-76}}),    iconTransformation(
+            extent={{100,-76},{120,-56}})));
+    AcidBaseBalance.Acidbase.OSA.O2CO2_by_integration o2CO2_by_integration
+      annotation (Placement(transformation(extent={{12,-42},{78,54}})));
+  equation
+    DO2=O2a*Q;
+    OER=MO2/DO2;
+    DCO2=CO2v*Q;
+    connect(O2a, bloodGases.O2a) annotation (Line(points={{-91,73},{-72.5,73},{
+            -72.5,71.06},{-58,71.06}}, color={0,0,127}));
+    connect(bloodGases.CO2a, CO2a) annotation (Line(points={{-58,66.44},{-74,
+            66.44},{-74,61},{-93,61}}, color={0,0,127}));
+    connect(bloodGases.Q, Q) annotation (Line(points={{-58.66,52.79},{-74,52.79},
+            {-74,44},{-94,44}}, color={0,0,127}));
+    connect(bloodGases.MO2, MO2) annotation (Line(points={{-59.1,45.65},{-70,
+            45.65},{-70,30},{-94,30}}, color={0,0,127}));
+    connect(bloodGases.MCO2, MCO2) annotation (Line(points={{-58.66,38.93},{-62,
+            38.93},{-62,18},{-94,18}}, color={0,0,127}));
+    connect(bloodGases.CO2v, CO2v) annotation (Line(points={{-14.44,66.02},{
+            1.78,66.02},{1.78,64},{30,64}},
+                                       color={0,0,127}));
+    connect(bloodGases.O2v, O2v) annotation (Line(points={{-14.44,70.64},{-2,
+            70.64},{-2,74},{24,74}}, color={0,0,127}));
+    connect(o2CO2_by_integration.BEox, BEox) annotation (Line(points={{8.7,
+            -11.1429},{0,-11.1429},{0,-13},{-21,-13}}, color={0,0,127}));
+    connect(o2CO2_by_integration.pO2, pO2_v) annotation (Line(points={{81.3,
+            27.2571},{81.3,27},{93,27}}, color={0,0,127}));
+    connect(o2CO2_by_integration.pCO2, pCO2_v) annotation (Line(points={{81.3,
+            20.4},{81.3,21},{105,21}}, color={0,0,127}));
+    connect(o2CO2_by_integration.pH, pH_v) annotation (Line(points={{81.3,
+            12.1714},{84.15,12.1714},{84.15,11},{93,11}}, color={0,0,127}));
+    connect(o2CO2_by_integration.cHCO3, cHCO3_v) annotation (Line(points={{81.3,
+            5.31429},{81.3,4},{97,4}}, color={0,0,127}));
+    connect(sO2_v, o2CO2_by_integration.sO2) annotation (Line(points={{96,-12},
+            {84,-12},{84,-1.54286},{81.3,-1.54286}}, color={0,0,127}));
+    connect(o2CO2_by_integration.ctO2, O2v) annotation (Line(points={{8.7,
+            26.5714},{-6,26.5714},{-6,38},{-6,70},{-4,70},{-2,70},{-2,74},{24,
+            74}}, color={0,0,127}));
+    connect(o2CO2_by_integration.ctCO2, CO2v) annotation (Line(points={{9.36,
+            9.42857},{-2,9.42857},{-2,64},{30,64}}, color={0,0,127}));
+    annotation(Icon(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}}),
+          graphics={Rectangle(
+            extent={{-100,100},{100,-100}},
+            lineColor={28,108,200},
+            fillColor={255,255,0},
+            fillPattern=FillPattern.Solid), Text(
+            extent={{-100,-106},{114,-138}},
+            lineColor={28,108,200},
+            fillColor={255,255,0},
+            fillPattern=FillPattern.Solid,
+            textString="%name")}),                                                                                                 Diagram(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}})));
+  end SimplestTissueIntgr;
   annotation (uses(
       Modelica(version="4.0.0"),
-      AcidBaseBalance(version="1"),
-      Physiolibrary(version="2.4.1")),
+      Physiolibrary(version="2.4.1"),
+      AcidBaseBalance(version="1")),
     version="2",
     conversion(noneFromVersion="", noneFromVersion="1"));
 end Simplest;
